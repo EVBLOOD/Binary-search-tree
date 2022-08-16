@@ -6,7 +6,7 @@
 /*   By: sakllam <sakllam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 19:26:51 by sakllam           #+#    #+#             */
-/*   Updated: 2022/08/16 20:23:19 by sakllam          ###   ########.fr       */
+/*   Updated: 2022/08/16 21:11:57 by sakllam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,10 @@ namespace ft
                 else
                     inserthelper(&((*root)->right), _new);
             }
+            void free_tree(bst<T> *x)
+            {
+                
+            }
             void printinghelper(bst<T> *root, std::string name, int i)
             {
                 if (!root)
@@ -75,7 +79,8 @@ namespace ft
                 bst_body() : head(NULL), size(0) {};
                 ~bst_body()
                 {
-                    alloc.deallocate(head, this->size);
+                    // alloc.deallocate(head, this->size);
+                    free_tree(this->head);
                 }
                 void insert(T el)
                 {
