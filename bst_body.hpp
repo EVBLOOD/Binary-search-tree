@@ -6,7 +6,7 @@
 /*   By: sakllam <sakllam@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 19:26:51 by sakllam           #+#    #+#             */
-/*   Updated: 2022/08/17 12:41:13 by sakllam          ###   ########.fr       */
+/*   Updated: 2022/08/17 16:24:37 by sakllam          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,44 @@ namespace ft
                 else
                     inserthelper(&((*root)->right), _new);
             }
-
+            bst<T> *findthedipestvalue(bst<T> **root)
+            {
+                if (*root == NULL || (*root)->left == NULL)
+                    return *root;
+                return findthedipestvalue(&((*root)->left));
+            }
+            void    removehelper(bst<T> **root, T value)
+            {
+                if (*root == NULL)
+                    return;
+                if (compare(value, (*root)->value))
+                    removehelper(&((*root)->left), value);
+                else if (compare((*root)->value, value))
+                    removehelper(&((*root)->right), value);
+                // if (!compare(value, (*root)->value) && !compare((*root)->value, value))
+                else
+                {
+                    if ((*root)->left == NULL && (*root)->right == NULL)
+                    {
+                        alloc.destroy(*root);
+                        alloc.deallocate(*root, 1);
+                        *root = NULL;
+                        return ;
+                    }
+                    if ((*root)->left == NULL)
+                    {
+                        bst<T> *right = (*root)->right;
+                        alloc.destroy(*root);
+                        alloc.deallocate(*root, 1);
+                        *root = right;
+                        return;   
+                    }
+                    bst<T> *deepest = findthedipestvalue(&((*root)->right));
+                    (*root)->right = deepest->right;
+                    (*root)->value = deepest->value;
+                    removehelper(&((*root)->right), deepest->value);
+                }
+            }
             void helperfree_tree(bst<T> *x)
             {
                 if (x == NULL)
@@ -133,6 +170,10 @@ namespace ft
                 {
                     helperfree_tree((this->head));
                     head = NULL;
+                }
+                void remove(T value)
+                {
+                    removehelper(&(this->head), value);
                 }
     };
 }
